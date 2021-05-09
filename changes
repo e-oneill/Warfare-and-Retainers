@@ -1,0 +1,9 @@
+<?php if (count($changes) > 0) : ?>
+
+<div class="error">
+    <?php foreach ($changes as $change) : ?>
+     <p><?php echo $change ?></p>
+    <?php endforeach ?>
+</div>
+
+<?php endif ?>

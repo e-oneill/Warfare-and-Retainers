@@ -1,0 +1,349 @@
+<?php 
+    session_start();
+
+if(isset($_GET['logout'])) {
+    session_destroy();
+    unset($_SESSION['username']);
+    header("location: index.php");
+}
+?>
+
+<!doctype html>
+<html>
+    
+<head>
+    <title>Monkehh's DM Tools</title>
+   <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+     <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+<script type='text/javascript'>
+function preview_image(event) 
+{
+ var reader = new FileReader();
+ reader.onload = function()
+ {
+  var output = document.getElementById('output_image');
+  output.src = reader.result;
+ }
+ reader.readAsDataURL(event.target.files[0]);
+}       
+</script>
+<script>
+function URL_add_parameter(url, param, value)
+    {
+    var hash       = {};
+    var parser     = document.createElement('a');
+
+    parser.href    = url;
+
+    var parameters = parser.search.split(/\?|&/);
+
+    for(var i=0; i < parameters.length; i++) {
+        if(!parameters[i])
+            continue;
+
+        var ary      = parameters[i].split('=');
+        hash[ary[0]] = ary[1];
+    }
+
+    hash[param] = value;
+
+    var list = [];  
+    Object.keys(hash).forEach(function (key) {
+        list.push(key + '=' + hash[key]);
+    });
+
+    parser.search = '?' + list.join('&');
+//    return parser.href;
+    location.href = parser.search;
+}    
+</script>     
+
+<link href="dmtools.css" rel="stylesheet" type="text/css">
+    
+    </head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="index.php">DM Tools</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
+      </li>
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Campaigns
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="mycampaigns.php">My Campaigns</a>
+<!--
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+-->
+        </div>
+      </li>
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Characters
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="mycharacters.php">My Characters</a>
+<!--
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+-->
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Retainers
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="myretainers.php">My Retainers</a>
+          <a class="dropdown-item" href="quickretainercreator.php">Quick Retainer Creator</a>
+<!--
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+-->
+        </div>
+      </li>
+    <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+    </li>
+        <?php if (!isset($_SESSION['username'])) : ?>
+    <li class="nav-item">
+        <a class="nav-link" href="login.php">Login</a>
+        <?php else: ?>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="login.php" style="color:blue; font-weight:bold;"><?php echo $_SESSION['username']; ?></a>
+    </li>
+    <li class="nav-item">
+        <p><a class="nav-link" href="index.php?logout='1'" style="color: red;">Logout</a></p>
+    </li>
+        <?php endif ?>
+    </ul>
+<!--
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" href="login.php">Login</button>
+    </form>
+-->
+  </div>
+
+</nav> 
+<hr>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+    <li class="breadcrumb-item"><a>My Retainers</a></li>
+  </ol>
+</nav>
+
+<div class=container-flex style="padding-left:1em;">
+    <div class="row">
+        <div class="col-md-12">
+
+<form method="post" action="/add_retainer.php" class="form-horizontal" enctype="multipart/form-data">
+<fieldset>
+<?php 
+            include "db_connect.php";
+            
+    
+        $stmt = $mysqli->prepare("SELECT RetainerName FROM retainer");
+        $stmt->execute();
+        $retainers = [];
+        $userid = $_SESSION['user_id'];
+    
+        foreach ($stmt->get_result() as $row) {
+            $retainers[] = $row['RetainerName'];
+        }
+
+            
+
+        $stmt = $mysqli->prepare("SELECT `Character Name` FROM `characters` WHERE `User` LIKE $userid");
+        $stmt->execute();
+        $characters = [];
+            
+        foreach ($stmt->get_result() as $row1) {
+            $characters[] = $row1['Character Name'];
+        }       
+            
+    ?>
+<!-- Form Name -->
+<legend>Add New Retainer</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-5 control-label" for="name">Retainer Name</label>  
+  <div class="col-md-6">
+  <input id="name" name="name" type="text" placeholder="e.g. Phandalin Man" class="form-control input-md" required="">
+    
+  </div>
+</div>
+
+<!-- Select Basic -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="type">Retainer Type</label>
+  <div class="col-md-5">
+<select name="type" id="array" class="form-control">
+    <?php
+    
+          
+        sort($retainers, SORT_STRING);
+        foreach ($retainers as $value)  {
+            printf('<option>%s</option>option>',$value);
+            
+        }
+    
+    ?>      
+    </select>
+  </div>
+</div>
+
+<!-- Select Basic -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="level">Level</label>
+  <div class="col-md-3">
+    <select id="level" name="level" class="form-control">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+    </select>
+  </div>
+</div>
+
+<!-- Select Basic -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="assoc-character">Character</label>
+  <div class="col-md-6">
+<select name="assoc-character" id="array" class="form-control">
+    <?php
+    
+          
+        sort($retainers, SORT_STRING);
+        foreach ($characters as $value)  {
+            printf('<option>%s</option>option>',$value);
+            
+        }
+            
+    
+    ?>      
+    </select>
+    <a style="font-style: italic;">Who does this retainer serve?</a>
+  </div>
+</div>
+<div class="form-group">
+<label class="col-md-4 control-label" for="image">Portrait</label>
+<div class="col-md-6">
+<input type="hidden" name="size" value="1000000">
+<div>  
+  <input type="file" id="image" name="image" class="input-file">
+</div>    
+</div>
+</div>
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="createretainer"></label>
+  <div class="col-md-4">
+    <button id="createretainer" name="createretainer" class="btn btn-primary">Add Retainer</button> 
+      
+      <br>
+  </div>
+</div>
+
+</fieldset>
+</form>
+            
+<form class="form-horizontal">
+<fieldset>
+
+<div class="form-part">
+<!-- Form Name -->
+<legend class="form-legend">Basics</legend>
+<hr>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-12 control-label" for="textinput">Character</label>  
+  <div class="col-md-12">
+  <input id="textinput" name="textinput" type="text" placeholder="Name" class="form-control input-md">
+    
+  </div>
+</div>
+
+<!-- Select Basic -->
+<div class="form-group">
+  <label class="col-md-12 control-label" for="level">Level</label>
+  <div class="col-md-12">
+    <select id="level" name="level" class="form-control">
+      <option value="">1</option>
+      <option value="">2</option>
+      <option value="">3</option>
+      <option value="">4</option>
+      <option value="">5</option>
+      <option value="">6</option>
+      <option value="">7</option>
+    </select>
+  </div>
+</div>
+
+<!-- Select Basic -->
+
+
+
+<!-- File Button --> 
+<div class="form-group">
+  <label class="form-button" for="image" style="padding-top:0.5rem;"> + Character Image</label>
+  <div class="col-md-12">
+    <input id="image" name="image" class="input-file" type="file" onchange="readURL(this);">
+  </div>
+</div>
+<img id="output_image" />   
+<div class="form-group">
+  <label class="col-md-12 control-label" for="armortype">Type</label>
+  <div class="col-md-12">
+    <select id="armortype" name="armortype" class="form-control">
+ <?php
+    
+          
+        sort($retainers, SORT_STRING);
+        foreach ($retainers as $value)  {
+            printf('<option>%s</option>option>',$value);
+            
+        }
+    
+    ?> 
+    </select>
+    <a>Select a type of retainer from the dropdown or create a custom one</a>
+  </div>
+</div>
+<button class="form-button">Create Custom Retainer</button>
+</div>
+</fieldset>
+</form>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,60 @@
+<?php
+ 
+    session_start();
+
+    $referer = filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL);
+    $referer_parsed = parse_url($referer, PHP_URL_PATH);
+//    $referer_parsed = (isset($referer_parsed['path']) ? $e['path'] : '/');
+    $referer_parsed = preg_replace(array('/^\//','/\/$/'), "", $referer_parsed);
+
+if(isset($_GET['logout'])) {
+    session_destroy();
+    unset($_SESSION['username']);
+    header("location: index.php");
+}
+
+include "db_connect.php";
+$name = "";
+$type = "";
+$level = 0;
+$assoc_char = "";
+$userid = $_SESSION['user_id'];
+
+$name = mysqli_real_escape_string($conn, $_GET["name"]);
+$type = mysqli_real_escape_string($conn, $_GET["type"]);
+$level = $_GET["level"];
+$assoc_char = $_GET["assoc-character"];
+
+$name = addslashes($name);
+$type = addslashes($type);
+$level = addslashes($level);
+$assoc_char = addslashes($assoc_char);
+
+$sql= "SELECT `character_id` FROM `characters` WHERE `Character Name` LIKE '$assoc_char' AND  `User` LIKE '$userid'"; 
+$result = $mysqli->query($sql);
+$row = $result->fetch_assoc();
+$assoc_char = $row['character_id'];
+
+$sql= "SELECT `RetainerID` FROM `retainer` WHERE `RetainerName` LIKE '$type'"; 
+$result = $mysqli->query($sql);
+$row = $result->fetch_assoc();
+$type = $row['RetainerID'];
+
+
+echo "<h2> Trying to add a new retainer: $name, a level $level $type, assigned to $assoc_char </h2>";
+
+//Search database for keyword
+
+//echo "<h2>Lookup $keyword</h2>";
+$sql = "INSERT INTO `user-retainers` (`User-Retainer-ID`,`User`, `Retainer-Name`,`Retainer-Level`,`Retainer-Type`,`Assoc-Character`) VALUES (NULL, '$userid', '$name', '$level', '$type', '$assoc_char')";
+
+
+
+$result = $mysqli->query($sql) or die(mysqli_error($mysqli));
+
+include "search_all_retainer.php";
+
+print_r($referer_parsed);
+
+header("Location: $referer_parsed")
+?>
