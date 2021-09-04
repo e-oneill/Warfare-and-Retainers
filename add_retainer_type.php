@@ -144,8 +144,8 @@ if (!empty($_POST['Retainer-Sec-Abi'])) {
             $RetainerPriAbi = mysqli_real_escape_string($conn, $_POST['Retainer-Pri-Abi']);
             $RetainerSecAbi = mysqli_real_escape_string($conn, $_POST['Retainer-Sec-Abi']);
             $RetainerAbiWeak = null;
-            $saves = $_POST['saves'];
-            $skills = $_POST['skills'];
+            $saves = mysqli_real_escape_string($conn,$_POST['saves']);
+            $skills = mysqli_real_escape_string($conn,$_POST['skills']);
             $userid = mysqli_real_escape_string($conn, $_SESSION['user_id']);
             $save1 =  mysqli_real_escape_string($conn,$saves[0]);
             if (!empty($saves[1])) {
