@@ -2,7 +2,7 @@
 //four variables to connect to database  
 $host = "localhost";
 $username = "monkehh";
-$user_pass = "177300Milan!";
+$user_pass = "XXXX";
 $database_in_use = "dnd";
     
 //create data if it's available
