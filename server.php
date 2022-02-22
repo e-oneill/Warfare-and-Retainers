@@ -9,7 +9,7 @@ $errors = array();
 
 
 //connect to the database
-$db = mysqli_connect('localhost', 'monkehh', '177300Milan!', 'registration');
+$db = mysqli_connect('localhost', 'XXXXX', 'XXXXXXX', 'registration');
 
 if (isset($_POST['reg_user'])) {
   // receive all input values from the form
